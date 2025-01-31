@@ -1,0 +1,25 @@
+tell application "UTM"
+	do shell script "open 'utm://start?name=HomeAssistant'"
+	activate -- 启动 UTM 主应用
+	delay 1 -- 等待 UTM 加载
+	try
+		set vm to virtual machine named "HomeAssistant"
+		start vm
+	on error errMsg
+		display dialog "启动虚拟机失败: " & errMsg
+	end try
+end tell
+
+-- 等待几秒后关闭 UTM 窗口（不退出）
+delay 3
+
+tell application "System Events"
+	tell process "UTM"
+		try
+			-- 发送 Command + W 关闭窗口
+			keystroke "w" using {command down}
+		on error errMsg
+			display dialog "关闭窗口失败: " & errMsg
+		end try
+	end tell
+end tell
